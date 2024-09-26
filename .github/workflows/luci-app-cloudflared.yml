@@ -36,8 +36,6 @@ jobs:
             token: ${{ secrets.c8 }}
             body: |
              > ### 编译时间 ：${{ env.build_time }}
-
-             English：luci-app-cloudflared_En_1.0_all.ipk
              中文版：luci-app-cloudflared_1.0_all.ipk
              
             tag_name: ${{ env.tag }}
