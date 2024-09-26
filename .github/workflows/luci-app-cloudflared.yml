@@ -31,7 +31,10 @@ jobs:
           echo "build_time=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
           echo "tag=$(date '+%Y-%m-%d')" >> $GITHUB_ENV
       - name: 发布
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@master
+        if: steps.tag.outputs.status == 'success' && !cancelled()
+        env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
         with:
             token: ${{ secrets.c8 }}
             body: |
