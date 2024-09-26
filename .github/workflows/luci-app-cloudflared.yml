@@ -30,14 +30,15 @@ jobs:
           #mv *.ipk luci-app-cloudflared_all.ipk
           echo "build_time=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
           echo "tag=$(date '+%Y-%m-%d')" >> $GITHUB_ENV
-      - name: 发布
+        
+      - name: 发布固件至Release
         uses: softprops/action-gh-release@master
+        if: steps.tag.outputs.status == 'success' && !cancelled()
+        env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-            token: ${{ secrets.c8 }}
-            body: |
-             > ### 编译时间 ：${{ env.build_time }}
-             中文版：luci-app-cloudflared_1.0_all.ipk
-             
-            tag_name: ${{ env.tag }}
-            files: /opt/openwrt-sdk*/bin/packages/aarch64_generic/base/*
-     
+        files: ${{ env.FIRMWARE }}/*
+        name: ${{ env.FILE_DATE }}-${{ env.OPENWRT_NAME }}-${{ env.DEVICE_NAME }}${{ env.SWITCH }}${{ env.WIFI_INTERFACE }}${{ env.BUILD_DOCKERMAN }}
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        body_path: release.txt
+
